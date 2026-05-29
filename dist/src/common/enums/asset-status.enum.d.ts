@@ -1,0 +1,9 @@
+export declare enum AssetStatus {
+    AVAILABLE = "AVAILABLE",
+    ASSIGNED = "ASSIGNED",
+    IN_REPAIR = "IN_REPAIR",
+    RETURNED = "RETURNED",
+    SCRAPPED = "SCRAPPED",
+    LOST = "LOST",
+    DAMAGED = "DAMAGED"
+}
