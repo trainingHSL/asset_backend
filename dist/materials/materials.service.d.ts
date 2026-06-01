@@ -11,6 +11,26 @@ export declare class MaterialsService {
     constructor(materialRepo: Repository<Material>, materialIssueRepo: Repository<MaterialIssue>, userRepo: Repository<User>);
     create(organizationId: number, dto: CreateMaterialDto): Promise<Material>;
     findAll(organizationId: number): Promise<Material[]>;
+    inventory(organizationId: number): Promise<{
+        currentIssuedQuantity: number;
+        totalIssuedQuantity: number;
+        stockStatus: string;
+        stockPercentage: number;
+        id: number;
+        organization: import("../organizations/organization.entity").Organization;
+        organizationId: number;
+        materialName: string;
+        category: string;
+        brand?: string;
+        unit: string;
+        totalQuantity: number;
+        availableQuantity: number;
+        minimumStockLevel: number;
+        location?: string;
+        isActive: boolean;
+        createdAt: Date;
+        updatedAt: Date;
+    }[]>;
     issue(organizationId: number, issuedBy: number, dto: IssueMaterialDto): Promise<MaterialIssue>;
     issues(organizationId: number): Promise<MaterialIssue[]>;
 }

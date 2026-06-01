@@ -71,7 +71,7 @@ __decorate([
     __metadata("design:type", String)
 ], AssetReturn.prototype, "damageRemarks", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'longtext', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], AssetReturn.prototype, "returnSignature", void 0);
 __decorate([

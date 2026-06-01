@@ -13,6 +13,7 @@ const asset_entity_1 = require("../assets/asset.entity");
 const asset_assignment_entity_1 = require("../assignments/asset-assignment.entity");
 const asset_return_entity_1 = require("../returns/asset-return.entity");
 const material_entity_1 = require("../materials/material.entity");
+const material_issue_entity_1 = require("../materials/material-issue.entity");
 const user_entity_1 = require("../users/user.entity");
 const reports_controller_1 = require("./reports.controller");
 const reports_service_1 = require("./reports.service");
@@ -21,7 +22,7 @@ let ReportsModule = class ReportsModule {
 exports.ReportsModule = ReportsModule;
 exports.ReportsModule = ReportsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, asset_entity_1.Asset, asset_assignment_entity_1.AssetAssignment, asset_return_entity_1.AssetReturn, material_entity_1.Material])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, asset_entity_1.Asset, asset_assignment_entity_1.AssetAssignment, asset_return_entity_1.AssetReturn, material_entity_1.Material, material_issue_entity_1.MaterialIssue])],
         controllers: [reports_controller_1.ReportsController],
         providers: [reports_service_1.ReportsService],
     })

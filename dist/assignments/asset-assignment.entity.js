@@ -59,7 +59,7 @@ __decorate([
     __metadata("design:type", String)
 ], AssetAssignment.prototype, "expectedReturnDate", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'longtext', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], AssetAssignment.prototype, "digitalSignature", void 0);
 __decorate([
@@ -67,11 +67,11 @@ __decorate([
     __metadata("design:type", String)
 ], AssetAssignment.prototype, "signedIpAddress", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'datetime', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], AssetAssignment.prototype, "signatureDate", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: assignment_status_enum_1.AssignmentStatus, default: assignment_status_enum_1.AssignmentStatus.PENDING_SIGNATURE }),
+    (0, typeorm_1.Column)({ type: 'enum', enum: assignment_status_enum_1.AssignmentStatus, enumName: 'assignment_status_enum', default: assignment_status_enum_1.AssignmentStatus.PENDING_SIGNATURE }),
     __metadata("design:type", String)
 ], AssetAssignment.prototype, "status", void 0);
 __decorate([

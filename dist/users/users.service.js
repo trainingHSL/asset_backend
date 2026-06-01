@@ -58,11 +58,13 @@ let UsersService = class UsersService {
         this.userRepo = userRepo;
     }
     async create(organizationId, dto) {
-        const exists = await this.userRepo.findOne({ where: { email: dto.email, organizationId } });
+        const email = dto.email.trim().toLowerCase();
+        const exists = await this.userRepo.findOne({ where: { email, organizationId } });
         if (exists)
             throw new common_1.ConflictException('User email already exists in this organization');
         const user = this.userRepo.create({
             ...dto,
+            email,
             organizationId,
             role: dto.role || user_role_enum_1.UserRole.USER,
             password: dto.password ? await bcrypt.hash(dto.password, 10) : undefined,
@@ -104,9 +106,16 @@ let UsersService = class UsersService {
     async syncFromApi(organizationId, users) {
         const result = [];
         for (const dto of users) {
-            const existing = await this.userRepo.findOne({ where: { email: dto.email, organizationId } });
+            const email = dto.email.trim().toLowerCase();
+            const existing = await this.userRepo.findOne({ where: { email, organizationId } });
             if (existing) {
-                await this.userRepo.update(existing.id, { ...dto, organizationId });
+                const updateData = {
+                    ...dto,
+                    email,
+                    organizationId,
+                    password: dto.password ? await bcrypt.hash(dto.password, 10) : existing.password,
+                };
+                await this.userRepo.update(existing.id, updateData);
                 result.push({ email: dto.email, action: 'updated' });
             }
             else {
@@ -120,7 +129,7 @@ let UsersService = class UsersService {
         return this.userRepo.find({ where: { organizationId }, order: { createdAt: 'DESC' } });
     }
     findByEmail(email) {
-        return this.userRepo.findOne({ where: { email } });
+        return this.userRepo.findOne({ where: { email: email.trim().toLowerCase(), isActive: true } });
     }
     async findOne(organizationId, id) {
         const user = await this.userRepo.findOne({ where: { organizationId, id } });

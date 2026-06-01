@@ -63,7 +63,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: user_role_enum_1.UserRole, default: user_role_enum_1.UserRole.USER }),
+    (0, typeorm_1.Column)({ type: 'enum', enum: user_role_enum_1.UserRole, enumName: 'user_role_enum', default: user_role_enum_1.UserRole.USER }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
@@ -87,6 +87,8 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
 exports.User = User = __decorate([
-    (0, typeorm_1.Entity)('users')
+    (0, typeorm_1.Entity)('users'),
+    (0, typeorm_1.Index)(['organizationId', 'email'], { unique: true }),
+    (0, typeorm_1.Index)(['organizationId', 'employeeCode'], { unique: true })
 ], User);
 //# sourceMappingURL=user.entity.js.map

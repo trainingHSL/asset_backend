@@ -70,7 +70,7 @@ __decorate([
     __metadata("design:type", String)
 ], Asset.prototype, "conditionNote", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'enum', enum: asset_status_enum_1.AssetStatus, default: asset_status_enum_1.AssetStatus.AVAILABLE }),
+    (0, typeorm_1.Column)({ type: 'enum', enum: asset_status_enum_1.AssetStatus, enumName: 'asset_status_enum', default: asset_status_enum_1.AssetStatus.AVAILABLE }),
     __metadata("design:type", String)
 ], Asset.prototype, "status", void 0);
 __decorate([
@@ -90,6 +90,7 @@ __decorate([
     __metadata("design:type", Date)
 ], Asset.prototype, "updatedAt", void 0);
 exports.Asset = Asset = __decorate([
-    (0, typeorm_1.Entity)('assets')
+    (0, typeorm_1.Entity)('assets'),
+    (0, typeorm_1.Index)(['organizationId', 'assetCode'], { unique: true })
 ], Asset);
 //# sourceMappingURL=asset.entity.js.map

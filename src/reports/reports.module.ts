@@ -4,12 +4,13 @@ import { Asset } from '../assets/asset.entity';
 import { AssetAssignment } from '../assignments/asset-assignment.entity';
 import { AssetReturn } from '../returns/asset-return.entity';
 import { Material } from '../materials/material.entity';
+import { MaterialIssue } from '../materials/material-issue.entity';
 import { User } from '../users/user.entity';
 import { ReportsController } from './reports.controller';
 import { ReportsService } from './reports.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Asset, AssetAssignment, AssetReturn, Material])],
+  imports: [TypeOrmModule.forFeature([User, Asset, AssetAssignment, AssetReturn, Material, MaterialIssue])],
   controllers: [ReportsController],
   providers: [ReportsService],
 })

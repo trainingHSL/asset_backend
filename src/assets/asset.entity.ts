@@ -1,9 +1,10 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Organization } from '../organizations/organization.entity';
 import { AssetStatus } from '../common/enums/asset-status.enum';
 import { AssetAssignment } from '../assignments/asset-assignment.entity';
 
 @Entity('assets')
+@Index(['organizationId', 'assetCode'], { unique: true })
 export class Asset {
   @PrimaryGeneratedColumn()
   id: number;
@@ -44,7 +45,7 @@ export class Asset {
   @Column({ nullable: true })
   conditionNote?: string;
 
-  @Column({ type: 'enum', enum: AssetStatus, default: AssetStatus.AVAILABLE })
+  @Column({ type: 'enum', enum: AssetStatus, enumName: 'asset_status_enum', default: AssetStatus.AVAILABLE })
   status: AssetStatus;
 
   @Column({ nullable: true })

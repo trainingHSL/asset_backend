@@ -20,24 +20,32 @@ const asset_entity_1 = require("../assets/asset.entity");
 const asset_assignment_entity_1 = require("../assignments/asset-assignment.entity");
 const asset_return_entity_1 = require("../returns/asset-return.entity");
 const material_entity_1 = require("../materials/material.entity");
+const material_issue_entity_1 = require("../materials/material-issue.entity");
 const user_entity_1 = require("../users/user.entity");
 const asset_status_enum_1 = require("../common/enums/asset-status.enum");
 let ReportsService = class ReportsService {
-    constructor(userRepo, assetRepo, assignmentRepo, returnRepo, materialRepo) {
+    constructor(userRepo, assetRepo, assignmentRepo, returnRepo, materialRepo, materialIssueRepo) {
         this.userRepo = userRepo;
         this.assetRepo = assetRepo;
         this.assignmentRepo = assignmentRepo;
         this.returnRepo = returnRepo;
         this.materialRepo = materialRepo;
+        this.materialIssueRepo = materialIssueRepo;
     }
     async dashboard(organizationId) {
-        const [users, assets, assignedAssets, availableAssets, returns, materials, lowStockMaterials] = await Promise.all([
+        const [users, assets, assignedAssets, availableAssets, returns, materials, materialIssues, issuedMaterialQuantity, lowStockMaterials] = await Promise.all([
             this.userRepo.count({ where: { organizationId } }),
             this.assetRepo.count({ where: { organizationId } }),
             this.assetRepo.count({ where: { organizationId, status: asset_status_enum_1.AssetStatus.ASSIGNED } }),
             this.assetRepo.count({ where: { organizationId, status: asset_status_enum_1.AssetStatus.AVAILABLE } }),
             this.returnRepo.count({ where: { organizationId } }),
             this.materialRepo.count({ where: { organizationId } }),
+            this.materialIssueRepo.count({ where: { organizationId } }),
+            this.materialIssueRepo
+                .createQueryBuilder('issue')
+                .select('COALESCE(SUM(issue.quantity), 0)', 'total')
+                .where('issue.organizationId = :organizationId', { organizationId })
+                .getRawOne(),
             this.materialRepo
                 .createQueryBuilder('material')
                 .where('material.organizationId = :organizationId', { organizationId })
@@ -51,6 +59,8 @@ let ReportsService = class ReportsService {
             availableAssets,
             returns,
             materials,
+            materialIssues,
+            issuedMaterialQuantity: Number(issuedMaterialQuantity?.total || 0),
             lowStockMaterials,
         };
     }
@@ -63,7 +73,9 @@ exports.ReportsService = ReportsService = __decorate([
     __param(2, (0, typeorm_1.InjectRepository)(asset_assignment_entity_1.AssetAssignment)),
     __param(3, (0, typeorm_1.InjectRepository)(asset_return_entity_1.AssetReturn)),
     __param(4, (0, typeorm_1.InjectRepository)(material_entity_1.Material)),
+    __param(5, (0, typeorm_1.InjectRepository)(material_issue_entity_1.MaterialIssue)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,

@@ -36,16 +36,16 @@ export class AssetAssignment {
   @Column({ type: 'date', nullable: true })
   expectedReturnDate?: string;
 
-  @Column({ type: 'longtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   digitalSignature?: string;
 
   @Column({ nullable: true })
   signedIpAddress?: string;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   signatureDate?: Date;
 
-  @Column({ type: 'enum', enum: AssignmentStatus, default: AssignmentStatus.PENDING_SIGNATURE })
+  @Column({ type: 'enum', enum: AssignmentStatus, enumName: 'assignment_status_enum', default: AssignmentStatus.PENDING_SIGNATURE })
   status: AssignmentStatus;
 
   @Column({ nullable: true })

@@ -32,6 +32,35 @@ export class MaterialsService {
     return this.materialRepo.find({ where: { organizationId }, order: { createdAt: 'DESC' } });
   }
 
+  async inventory(organizationId: number) {
+    const materials = await this.materialRepo.find({
+      where: { organizationId },
+      relations: { issues: true },
+      order: { createdAt: 'DESC' },
+    });
+
+    return materials.map((material) => {
+      const totalIssuedQuantity = material.issues?.reduce((sum, issue) => sum + Number(issue.quantity || 0), 0) || 0;
+      const currentIssuedQuantity = Math.max(Number(material.totalQuantity || 0) - Number(material.availableQuantity || 0), 0);
+      const stockStatus =
+        material.availableQuantity <= 0
+          ? 'OUT_OF_STOCK'
+          : material.availableQuantity <= material.minimumStockLevel
+            ? 'LOW_STOCK'
+            : 'IN_STOCK';
+      const stockPercentage = material.totalQuantity > 0 ? Math.round((material.availableQuantity / material.totalQuantity) * 100) : 0;
+      const { issues, ...materialData } = material;
+
+      return {
+        ...materialData,
+        currentIssuedQuantity,
+        totalIssuedQuantity,
+        stockStatus,
+        stockPercentage,
+      };
+    });
+  }
+
   async issue(organizationId: number, issuedBy: number, dto: IssueMaterialDto) {
     const material = await this.materialRepo.findOne({ where: { id: dto.materialId, organizationId } });
     if (!material) throw new NotFoundException('Material not found');
@@ -58,7 +87,7 @@ export class MaterialsService {
   issues(organizationId: number) {
     return this.materialIssueRepo.find({
       where: { organizationId },
-      relations: { material: true, user: true },
+      relations: { material: true, user: true, issuedByUser: true },
       order: { issueDate: 'DESC' },
     });
   }

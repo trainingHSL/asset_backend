@@ -1,10 +1,12 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Organization } from '../organizations/organization.entity';
 import { UserRole } from '../common/enums/user-role.enum';
 import { AssetAssignment } from '../assignments/asset-assignment.entity';
 import { MaterialIssue } from '../materials/material-issue.entity';
 
 @Entity('users')
+@Index(['organizationId', 'email'], { unique: true })
+@Index(['organizationId', 'employeeCode'], { unique: true })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -39,7 +41,7 @@ export class User {
   @Column({ nullable: true })
   password?: string;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
+  @Column({ type: 'enum', enum: UserRole, enumName: 'user_role_enum', default: UserRole.USER })
   role: UserRole;
 
   @Column({ default: true })

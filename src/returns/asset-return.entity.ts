@@ -45,7 +45,7 @@ export class AssetReturn {
   @Column({ nullable: true })
   damageRemarks?: string;
 
-  @Column({ type: 'longtext', nullable: true })
+  @Column({ type: 'text', nullable: true })
   returnSignature?: string;
 
   @CreateDateColumn()

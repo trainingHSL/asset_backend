@@ -10,6 +10,8 @@ export declare class ReportsController {
         availableAssets: number;
         returns: number;
         materials: number;
+        materialIssues: number;
+        issuedMaterialQuantity: number;
         lowStockMaterials: number;
     }>;
 }

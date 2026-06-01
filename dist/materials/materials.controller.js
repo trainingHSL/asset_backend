@@ -35,6 +35,9 @@ let MaterialsController = class MaterialsController {
     findAll(currentUser) {
         return this.materialsService.findAll(currentUser.organizationId);
     }
+    inventory(currentUser) {
+        return this.materialsService.inventory(currentUser.organizationId);
+    }
     issues(currentUser) {
         return this.materialsService.issues(currentUser.organizationId);
     }
@@ -65,6 +68,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], MaterialsController.prototype, "findAll", null);
+__decorate([
+    (0, roles_decorator_1.Roles)(user_role_enum_1.UserRole.ORG_ADMIN, user_role_enum_1.UserRole.ASSET_MANAGER),
+    (0, common_1.Get)('inventory'),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], MaterialsController.prototype, "inventory", null);
 __decorate([
     (0, roles_decorator_1.Roles)(user_role_enum_1.UserRole.ORG_ADMIN, user_role_enum_1.UserRole.ASSET_MANAGER),
     (0, common_1.Get)('issues'),

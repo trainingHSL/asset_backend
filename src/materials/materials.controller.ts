@@ -31,6 +31,12 @@ export class MaterialsController {
   }
 
   @Roles(UserRole.ORG_ADMIN, UserRole.ASSET_MANAGER)
+  @Get('inventory')
+  inventory(@CurrentUser() currentUser: JwtUser) {
+    return this.materialsService.inventory(currentUser.organizationId);
+  }
+
+  @Roles(UserRole.ORG_ADMIN, UserRole.ASSET_MANAGER)
   @Get('issues')
   issues(@CurrentUser() currentUser: JwtUser) {
     return this.materialsService.issues(currentUser.organizationId);

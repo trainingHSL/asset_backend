@@ -11,6 +11,7 @@ export declare class MaterialIssue {
     userId: number;
     quantity: number;
     issuedBy: number;
+    issuedByUser?: User;
     remarks?: string;
     issueDate: Date;
 }

@@ -18,6 +18,12 @@ const assignments_module_1 = require("./assignments/assignments.module");
 const returns_module_1 = require("./returns/returns.module");
 const materials_module_1 = require("./materials/materials.module");
 const reports_module_1 = require("./reports/reports.module");
+const health_module_1 = require("./health/health.module");
+const toBoolean = (value, fallback = false) => {
+    if (value === undefined || value === null || value === '')
+        return fallback;
+    return ['true', '1', 'yes', 'y'].includes(value.toLowerCase());
+};
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,17 +32,29 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
+                envFilePath: '.env',
             }),
-            typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres',
-                host: process.env.DB_HOST || '127.0.0.1',
-                port: Number(process.env.DB_PORT) || 5432,
-                username: process.env.DB_USER || 'postgres',
-                password: process.env.DB_PASS || '',
-                database: process.env.DB_NAME || 'asset',
-                autoLoadEntities: true,
-                synchronize: true,
+            typeorm_1.TypeOrmModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => ({
+                    type: 'postgres',
+                    host: configService.get('DB_HOST') || '127.0.0.1',
+                    port: Number(configService.get('DB_PORT') || 5432),
+                    username: configService.get('DB_USER') || 'postgres',
+                    password: configService.get('DB_PASS') ?? '',
+                    database: configService.get('DB_NAME') || 'asset',
+                    autoLoadEntities: true,
+                    synchronize: toBoolean(configService.get('DB_SYNC'), true),
+                    ssl: toBoolean(configService.get('DB_SSL'), false),
+                    retryAttempts: Number(configService.get('DB_RETRY_ATTEMPTS') || 5),
+                    retryDelay: Number(configService.get('DB_RETRY_DELAY') || 3000),
+                    extra: {
+                        connectionTimeoutMillis: Number(configService.get('DB_CONNECTION_TIMEOUT') || 10000),
+                    },
+                }),
             }),
+            health_module_1.HealthModule,
             auth_module_1.AuthModule,
             organizations_module_1.OrganizationsModule,
             users_module_1.UsersModule,

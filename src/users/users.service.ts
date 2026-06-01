@@ -15,11 +15,13 @@ export class UsersService {
   ) {}
 
   async create(organizationId: number, dto: CreateUserDto) {
-    const exists = await this.userRepo.findOne({ where: { email: dto.email, organizationId } });
+    const email = dto.email.trim().toLowerCase();
+    const exists = await this.userRepo.findOne({ where: { email, organizationId } });
     if (exists) throw new ConflictException('User email already exists in this organization');
 
     const user = this.userRepo.create({
       ...dto,
+      email,
       organizationId,
       role: dto.role || UserRole.USER,
       password: dto.password ? await bcrypt.hash(dto.password, 10) : undefined,
@@ -68,9 +70,16 @@ export class UsersService {
   async syncFromApi(organizationId: number, users: CreateUserDto[]) {
     const result = [];
     for (const dto of users) {
-      const existing = await this.userRepo.findOne({ where: { email: dto.email, organizationId } });
+      const email = dto.email.trim().toLowerCase();
+      const existing = await this.userRepo.findOne({ where: { email, organizationId } });
       if (existing) {
-        await this.userRepo.update(existing.id, { ...dto, organizationId });
+        const updateData: Partial<User> = {
+          ...dto,
+          email,
+          organizationId,
+          password: dto.password ? await bcrypt.hash(dto.password, 10) : existing.password,
+        };
+        await this.userRepo.update(existing.id, updateData);
         result.push({ email: dto.email, action: 'updated' });
       } else {
         await this.create(organizationId, dto);
@@ -85,7 +94,7 @@ export class UsersService {
   }
 
   findByEmail(email: string) {
-    return this.userRepo.findOne({ where: { email } });
+    return this.userRepo.findOne({ where: { email: email.trim().toLowerCase(), isActive: true } });
   }
 
   async findOne(organizationId: number, id: number) {

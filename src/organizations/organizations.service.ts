@@ -13,11 +13,13 @@ export class OrganizationsService {
   ) {}
 
   async create(dto: CreateOrganizationDto) {
-    const exists = await this.organizationRepo.findOne({ where: { email: dto.email } });
+    const email = dto.email.trim().toLowerCase();
+    const exists = await this.organizationRepo.findOne({ where: { email } });
     if (exists) throw new ConflictException('Organization email already exists');
 
     const organization = this.organizationRepo.create({
       ...dto,
+      email,
       password: await bcrypt.hash(dto.password, 10),
     });
 
@@ -27,7 +29,7 @@ export class OrganizationsService {
   }
 
   findByEmail(email: string) {
-    return this.organizationRepo.findOne({ where: { email } });
+    return this.organizationRepo.findOne({ where: { email: email.trim().toLowerCase(), isActive: true } });
   }
 
   async findOne(id: number) {

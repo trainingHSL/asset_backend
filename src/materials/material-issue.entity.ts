@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Organization } from '../organizations/organization.entity';
 import { Material } from './material.entity';
 import { User } from '../users/user.entity';
@@ -31,6 +31,10 @@ export class MaterialIssue {
 
   @Column()
   issuedBy: number;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'issuedBy' })
+  issuedByUser?: User;
 
   @Column({ nullable: true })
   remarks?: string;

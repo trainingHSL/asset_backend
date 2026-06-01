@@ -54,6 +54,11 @@ __decorate([
     __metadata("design:type", Number)
 ], MaterialIssue.prototype, "issuedBy", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, { nullable: true }),
+    (0, typeorm_1.JoinColumn)({ name: 'issuedBy' }),
+    __metadata("design:type", user_entity_1.User)
+], MaterialIssue.prototype, "issuedByUser", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], MaterialIssue.prototype, "remarks", void 0);
